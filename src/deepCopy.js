@@ -1,58 +1,27 @@
+const copyStrategies = {
+  Date: (target) => new Date(target.getTime()),
+  RegExp: (target) => new RegExp(target),
+  Array: (target) => target.map((item) => deepCopy(item)),
+  Map: (target) =>
+    new Map([...target].map(([key, value]) => [key, deepCopy(value)])),
+  Set: (target) => new Set([...target].map((value) => deepCopy(value))),
+  Object: (target) =>
+    Object.keys(target).reduce((acc, key) => {
+      acc[key] = deepCopy(target[key]);
+      return acc;
+    }, {}),
+  default: (target) => target,
+};
+
 const deepCopy = (target) => {
-  if (typeof target !== "object") {
+  if (typeof target !== "object" || target === null) {
     return target;
   }
 
-  if (target instanceof Date) {
-    return new Date(target.getTime());
-  }
+  const strategy =
+    copyStrategies[target.constructor.name] || copyStrategies["default"];
 
-  if (target instanceof RegExp) {
-    return new RegExp(target);
-  }
-
-  if (Array.isArray(target)) {
-    const copy = [];
-
-    for (let i = 0; i < target.length; i++) {
-      copy[i] = deepCopy(target[i]);
-    }
-
-    return copy;
-  }
-
-  if (target instanceof Map) {
-    const copy = new Map();
-    for (let [key, value] of target) {
-      copy.set(key, deepCopy(value));
-    }
-
-    return copy;
-  }
-
-  if (target instanceof Set) {
-    const copy = new Set();
-
-    for (let value of target) {
-      copy.add(deepCopy(value));
-    }
-
-    return copy;
-  }
-
-  if (target instanceof Object) {
-    const copy = {};
-
-    for (const key in target) {
-      if (target.hasOwnProperty(key)) {
-        copy[key] = deepCopy(target[key]);
-      }
-    }
-
-    return copy;
-  }
-
-  return target;
+  return strategy(target);
 };
 
 module.exports = deepCopy;
