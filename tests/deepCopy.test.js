@@ -89,4 +89,39 @@ describe("deepCopy function", () => {
     expect(copy).toEqual(original);
     expect(copy).not.toBe(original);
   });
+
+  test("returns the same value for numbers", () => {
+    const original = 42;
+    const copy = deepCopy(original);
+
+    expect(copy).toBe(original);
+  });
+
+  test("returns the same value for strings", () => {
+    const original = "Hello, world!";
+    const copy = deepCopy(original);
+
+    expect(copy).toBe(original);
+  });
+
+  test("returns the same value for booleans", () => {
+    const original = true;
+    const copy = deepCopy(original);
+
+    expect(copy).toBe(original);
+  });
+
+  test("returns the same value for null", () => {
+    const original = null;
+    const copy = deepCopy(original);
+
+    expect(copy).toBe(original);
+  });
+
+  test("returns the same value for undefined", () => {
+    const original = undefined;
+    const copy = deepCopy(original);
+
+    expect(copy).toBe(original);
+  });
 });
